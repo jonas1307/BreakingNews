@@ -83,7 +83,8 @@ namespace BreakingNews.Presentation.AspNetCore
             services.AddScoped<IUserRepository, UserRepository>();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,
+            UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -101,6 +102,8 @@ namespace BreakingNews.Presentation.AspNetCore
             app.UseCookiePolicy();
 
             app.UseAuthentication();
+
+            Seed.SeedData(userManager, roleManager);
 
             app.UseMvc(routes =>
             {
