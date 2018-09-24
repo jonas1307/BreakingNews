@@ -1,0 +1,32 @@
+﻿@model IEnumerable<BreakingNews.Application.ViewModels.PublicNewsViewModel>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h1>Notícias mais recentes</h1>
+
+<div class="row">
+    @if (Model.Any())
+    {
+        foreach (var item in Model)
+        {
+            <div class="col-sm-12 col-md-6 col-lg-3">
+                <article id="@($"post-{item.Id}")">
+                    <h2><a href="@Url.Link("news-route", new {id = item.FriendlyUrl})">@item.Title</a></h2>
+                    <div class="entry-info">
+                        <p class="small">Publicado por @item.Author em @item.PublishDate.ToString("dd/MM").</p>
+                    </div>
+                    <div class="entry-text">
+                        <p>@item.TextContent</p>
+                    </div>
+                </article>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-sm-12">
+            <p>Ainda não foi publicado conteúdo nessa página.</p>
+        </div>
+    }
+</div>

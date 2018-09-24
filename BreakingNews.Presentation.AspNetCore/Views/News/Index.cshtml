@@ -1,0 +1,45 @@
+﻿@model IEnumerable<BreakingNews.Application.ViewModels.NewsViewModel>
+
+@{
+    ViewBag.Title = "Lista de Notícias";
+    Layout = "_Layout";
+}
+
+<h1>@ViewBag.Title</h1>
+<br />
+<div>
+    @Html.ActionLink("Novo", "New", "News", null, new { @class = "btn-lg btn-primary" })
+</div>
+<br />
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Autor</th>
+            <th>Título</th>
+            <th>Publicado?</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Any())
+        {
+            foreach (var news in Model)
+            {
+                <tr>
+                    <td>@news.Id</td>
+                    <td>@news.Author</td>
+                    <td>@news.Title</td>
+                    <td>@(news.IsPublished ? "Sim" : "Não")</td>
+                    <td><a class="btn-sm btn-primary" href="@Url.Action("Edit", new {id = news.Id})">Editar</a> | <a class="btn-sm btn-danger" href="@Url.Action("Delete", new {id = news.Id})">Excluir</a></td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4">Não há notícias para exibir.</td>
+            </tr>
+        }
+    </tbody>
+</table>

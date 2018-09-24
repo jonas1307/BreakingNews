@@ -1,0 +1,88 @@
+﻿@model BreakingNews.Application.ViewModels.NewsViewModel
+
+@{
+    ViewBag.Title = $"{(Model.Id == 0 ? "Cadastro" : "Alteração")} de notícia";
+    Layout = "_Layout";
+}
+
+@using (Html.BeginForm("Save", "News", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.TextContent)
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Title)
+        @Html.TextBoxFor(m => m.Title, new { @class = "form-control", autocomplete = "off" })
+        @Html.ValidationMessageFor(m => m.Title)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.FriendlyUrl)
+        @Html.TextBoxFor(m => m.FriendlyUrl, new { @class = "form-control", autocomplete = "off" })
+        @Html.ValidationMessageFor(m => m.FriendlyUrl)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Author)
+        @Html.TextBoxFor(m => m.Author, new { @class = "form-control", autocomplete = "off" })
+        @Html.ValidationMessageFor(m => m.Author)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.HtmlContent)
+        @Html.TextAreaFor(m => m.HtmlContent, new { @class = "form-control", autocomplete = "off" })
+        @Html.ValidationMessageFor(m => m.HtmlContent)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.IsPublished)
+        @Html.CheckBoxFor(m => m.IsPublished, new { @class = "form-control", autocomplete = "off" })
+        @Html.ValidationMessageFor(m => m.IsPublished)
+    </div>
+
+    if (Model.Id == 0)
+    {
+        @Html.HiddenFor(m => m.CreationDate)
+    }
+    else
+    {
+        <div class="form-group">
+            @Html.LabelFor(m => m.CreationDate)
+            @Html.TextBoxFor(m => m.CreationDate, new { disabled = "disabled", @class = "form-control", autocomplete = "off" })
+            @Html.ValidationMessageFor(m => m.CreationDate)
+        </div>
+    }
+
+    if (Model.PublishDate == null)
+    {
+        @Html.HiddenFor(m => m.PublishDate)
+    }
+    else
+    {
+        <div class="form-group">
+            @Html.LabelFor(m => m.PublishDate)
+            @Html.TextBoxFor(m => m.PublishDate, new { disabled = "disabled", @class = "form-control", autocomplete = "off" })
+            @Html.ValidationMessageFor(m => m.PublishDate)
+        </div>
+    }
+
+    if (Model.LastUpdateDate == null)
+    {
+        @Html.HiddenFor(m => m.LastUpdateDate)
+    }
+    else
+    {
+        <div class="form-group">
+            @Html.LabelFor(m => m.LastUpdateDate)
+            @Html.TextBoxFor(m => m.LastUpdateDate, new { disabled = "disabled", @class = "form-control", autocomplete = "off" })
+            @Html.ValidationMessageFor(m => m.LastUpdateDate)
+        </div>
+    }
+
+    <div class="form-group">
+        <button class="btn btn-success" type="submit">Salvar</button>
+        <a href="@Url.Action("Index", "News")" class="btn btn-danger">Voltar</a>
+    </div>
+}
