@@ -49,15 +49,7 @@ namespace BreakingNews.Presentation.AspNetCore
                 options.SlidingExpiration = true;
             });
 
-            services.AddMvc(config =>
-                {
-                    // using Microsoft.AspNetCore.Mvc.Authorization;
-                    // using Microsoft.AspNetCore.Authorization;
-                    var policy = new AuthorizationPolicyBuilder()
-                        .RequireAuthenticatedUser()
-                        .Build();
-                    config.Filters.Add(new AuthorizeFilter(policy));
-                })
+            services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddAutoMapper();
@@ -66,9 +58,10 @@ namespace BreakingNews.Presentation.AspNetCore
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<BreakingNewsContext>();
+            services.AddIdentity<IdentityUser, IdentityRole>()
+               .AddEntityFrameworkStores<BreakingNewsContext>()
+               .AddDefaultUI()
+               .AddDefaultTokenProviders();
 
             services.AddScoped(typeof(IAppServiceBase<>), typeof(AppServiceBase<>));
             services.AddScoped<INewsAppService, NewsAppService>();
