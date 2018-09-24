@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BreakingNews.Presentation.AspNetCore.Controllers
 {
-    //[AllowAnonymous]
+    [AllowAnonymous]
     public class HomeController : Controller
     {
         private readonly IMapper _mapper;

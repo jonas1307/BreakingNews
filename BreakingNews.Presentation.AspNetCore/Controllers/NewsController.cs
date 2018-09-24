@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BreakingNews.Presentation.AspNetCore.Controllers
 {
-    //[Authorize(Roles = "admin")]
+    [Authorize(Roles = "admin")]
     public class NewsController : Controller
     {
         private readonly IMapper _mapper;

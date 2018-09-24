@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace BreakingNews.Presentation.AspNetCore
 {
@@ -37,14 +38,25 @@ namespace BreakingNews.Presentation.AspNetCore
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.ConfigureApplicationCookie(options =>
+            {
+                // Cookie settings
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+
+                options.LoginPath = "/Identity/Account/Login";
+                options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+                options.SlidingExpiration = true;
+            });
+
             services.AddMvc(config =>
                 {
-                    //// using Microsoft.AspNetCore.Mvc.Authorization;
-                    //// using Microsoft.AspNetCore.Authorization;
-                    //var policy = new AuthorizationPolicyBuilder()
-                    //    .RequireAuthenticatedUser()
-                    //    .Build();
-                    //config.Filters.Add(new AuthorizeFilter(policy));
+                    // using Microsoft.AspNetCore.Mvc.Authorization;
+                    // using Microsoft.AspNetCore.Authorization;
+                    var policy = new AuthorizationPolicyBuilder()
+                        .RequireAuthenticatedUser()
+                        .Build();
+                    config.Filters.Add(new AuthorizeFilter(policy));
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -54,7 +66,8 @@ namespace BreakingNews.Presentation.AspNetCore
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddDefaultIdentity<IdentityUser>()
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<BreakingNewsContext>();
 
             services.AddScoped(typeof(IAppServiceBase<>), typeof(AppServiceBase<>));
