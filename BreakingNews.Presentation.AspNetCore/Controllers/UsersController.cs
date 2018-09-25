@@ -100,7 +100,7 @@ namespace BreakingNews.Presentation.AspNetCore.Controllers
                 Name = role.Name
             };
 
-            return View("RoleForm", model);
+            return View("FormRole", model);
         }
 
         [HttpGet("/Roles/New")]
@@ -108,7 +108,7 @@ namespace BreakingNews.Presentation.AspNetCore.Controllers
         {
             var model = new RoleViewModel();
 
-            return View("RoleForm", model);
+            return View("FormRole", model);
         }
 
         [HttpPost("/Roles/Save")]
@@ -116,7 +116,7 @@ namespace BreakingNews.Presentation.AspNetCore.Controllers
         public async Task<IActionResult> SaveRole(RoleViewModel model)
         {
             if (!ModelState.IsValid)
-                return View("RoleForm", model);
+                return View("FormRole", model);
 
             if (model.Id == null)
             {
@@ -130,7 +130,7 @@ namespace BreakingNews.Presentation.AspNetCore.Controllers
                 if (existingRole.Name == "admin" || existingRole.Name == "user")
                 {
                     ModelState.AddModelError("Name", "Não é possível alterar as Roles padrões.");
-                    return View("RoleForm", model);
+                    return View("FormRole", model);
                 }
 
                 existingRole.Name = model.Name;
@@ -163,6 +163,13 @@ namespace BreakingNews.Presentation.AspNetCore.Controllers
             await _roleManager.DeleteAsync(role);
 
             return RedirectToAction("Index");
+        }
+
+        public IActionResult New()
+        {
+            var model = new UserViewModel();
+
+            return View("FormUsers", model);
         }
     }
 }

@@ -4,13 +4,12 @@
     ViewBag.Title = "Lista de Notícias";
     Layout = "_Layout";
 }
-
-<h1>@ViewBag.Title</h1>
 <br />
 <div>
-    @Html.ActionLink("Novo", "New", "News", null, new { @class = "btn-lg btn-primary" })
+    Ações: @Html.ActionLink("Nova notícia", "New", "News", null, new { @class = "btn btn-success" })
 </div>
 <br />
+<h1>@ViewBag.Title</h1>
 <table class="table table-hover">
     <thead>
         <tr>

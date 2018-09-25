@@ -31,7 +31,7 @@ namespace BreakingNews.Presentation.AspNetCore.Controllers
 
         public IActionResult New()
         {
-            return View("Form", new NewsViewModel());
+            return View("FormNews", new NewsViewModel());
         }
 
         public async Task<IActionResult> Edit(int id)
@@ -41,7 +41,7 @@ namespace BreakingNews.Presentation.AspNetCore.Controllers
             if (data == null)
                 return NotFound();
 
-            return View("Form", _mapper.Map<News, NewsViewModel>(data));
+            return View("FormNews", _mapper.Map<News, NewsViewModel>(data));
         }
 
         [HttpPost]
@@ -57,7 +57,7 @@ namespace BreakingNews.Presentation.AspNetCore.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View("Form", model);
+                return View("FormNews", model);
             }
 
             if (model.IsPublished)
