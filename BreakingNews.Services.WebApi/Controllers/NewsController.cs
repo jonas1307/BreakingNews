@@ -1,9 +1,7 @@
-﻿using System.Threading.Tasks;
-using BreakingNews.Domain.Entities;
-using BreakingNews.Repositories.App;
-using Microsoft.ApplicationInsights.AspNetCore.Extensions;
+﻿using BreakingNews.Domain.Entities;
+using BreakingNews.Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace BreakingNews.Services.WebApi.Controllers
 {
@@ -11,19 +9,24 @@ namespace BreakingNews.Services.WebApi.Controllers
     [Route("api/News")]
     public class NewsController : Controller
     {
-        private readonly BreakingNewsContext _context = new BreakingNewsContext();
+        private readonly INewsService _newsService;
+
+        public NewsController(INewsService newsService)
+        {
+            _newsService = newsService;
+        }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var data = await _context.News.ToListAsync();
+            var data = await _newsService.GetAll();
             return Ok(data);
         }
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> Get(int id)
         {
-            var data = await _context.FindAsync<News>(id);
+            var data = await _newsService.GetById(id);
 
             if (data == null)
                 return NotFound();
@@ -34,7 +37,7 @@ namespace BreakingNews.Services.WebApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            var data = await _context.News.FirstOrDefaultAsync(f => f.FriendlyUrl == id);
+            var data = await _newsService.QuerySingle(f => f.FriendlyUrl == id);
 
             if (data == null)
                 return NotFound();
@@ -43,39 +46,37 @@ namespace BreakingNews.Services.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(News value)
+        public IActionResult Post(News model)
         {
-            await _context.News.AddAsync(value);
+            _newsService.Add(model);
 
-            var uri = $"{Request.GetUri().AbsoluteUri}/{value.Id}";
+            var uri = $"{Request.Path}/{model.Id}";
 
-            return Created(uri, value);
+            return Created(uri, model);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, News value)
+        public async Task<IActionResult> Put(int id, News model)
         {
-            var data = await _context.FindAsync<News>(id);
+            var data = await _newsService.GetById(id);
 
             if (data == null)
                 return NotFound();
 
-            _context.Entry(value).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            _newsService.Update(model);
 
-            return Ok(value);
+            return Ok(model);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var data = await _context.FindAsync<News>(id);
+            var data = await _newsService.GetById(id);
 
             if (data == null)
                 return NotFound();
 
-            _context.Remove(data);
-            await _context.SaveChangesAsync();
+            _newsService.Remove(data);
 
             return Ok();
         }

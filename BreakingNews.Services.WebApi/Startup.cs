@@ -1,5 +1,10 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using BreakingNews.Domain.Interfaces.Repositories;
+using BreakingNews.Domain.Interfaces.Services;
+using BreakingNews.Domain.Services;
+using BreakingNews.Infrastructure.Database.Repository;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,25 +19,29 @@ namespace BreakingNews.Services.WebApi
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddScoped(typeof(IServiceBase<>), typeof(ServiceBase<>));
-            //services.AddScoped<INewsService, NewsService>();
+            services.AddScoped(typeof(IServiceBase<>), typeof(ServiceBase<>));
+            services.AddScoped<INewsService, NewsService>();
 
-            //services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
-            //services.AddScoped<INewsRepository, NewsRepository>();
-            services.AddMvc();
+            services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
+            services.AddScoped<INewsRepository, NewsRepository>();
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseHsts();
+            }
 
+            app.UseHttpsRedirection();
             app.UseMvc();
         }
     }
