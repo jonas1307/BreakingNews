@@ -24,7 +24,7 @@ namespace BreakingNews.Presentation.AspNetCore.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var data = await _newsAppService.GetAll();
+            var data = await _newsAppService.GetNewsByWebService();
 
             return View(_mapper.Map<IEnumerable<News>, IEnumerable<NewsViewModel>>(data));
         }

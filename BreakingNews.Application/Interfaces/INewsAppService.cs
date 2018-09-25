@@ -9,5 +9,7 @@ namespace BreakingNews.Application.Interfaces
         Task<News> GetByFriendlyName(string friendlyName);
 
         Task<IEnumerable<News>> GetPublicNews();
+
+        Task<IEnumerable<News>> GetNewsByWebService();
     }
 }
