@@ -32,8 +32,8 @@
                 <ul class="nav navbar-nav">
                     @if (User.IsInRole("admin"))
                     {
-                        <li><a asp-area="" asp-controller="News" asp-action="Index">Sobre</a></li>
-                        <li><a asp-area="" asp-controller="Users" asp-action="Index">Sobre</a></li>
+                        <li><a asp-area="" asp-controller="News" asp-action="Index">Gerenciar Notícias</a></li>
+                        <li><a asp-area="" asp-controller="Users" asp-action="Index">Gerenciar Usuários</a></li>
                     }
                     <li><a asp-area="" asp-controller="Home" asp-action="About">Sobre</a></li>
                 </ul>
