@@ -45,7 +45,20 @@ namespace BreakingNews.Application.AppService
 
         public async Task<IEnumerable<News>> GetPublicNews()
         {
-            return await _newsService.QueryMultiple(qry => qry.IsPublished);
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ApiUrl);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage response = await client.GetAsync("api/PublicNews");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return JsonConvert.DeserializeObject<IEnumerable<News>>(await response.Content.ReadAsStringAsync());
+                }
+            }
+
+            return null;
         }
     }
 }
