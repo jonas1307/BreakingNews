@@ -20,10 +20,7 @@ namespace BreakingNews.Infrastructure.Database.EntityConfiguration
                 .HasMaxLength(256)
                 .IsRequired();
 
-            builder.Property(p => p.HtmlContent)
-                .IsRequired();
-
-            builder.Property(p => p.TextContent)
+            builder.Property(p => p.Content)
                 .IsRequired();
 
             builder.Property(p => p.CreationDate)

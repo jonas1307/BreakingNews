@@ -25,11 +25,9 @@ namespace BreakingNews.Application.ViewModels
         [Required(ErrorMessage = "O campo é obrigatório.")]
         public string Title { get; set; }
 
-        public string TextContent { get; set; }
-
         [Display(Name = "Conteúdo:")]
         [Required(ErrorMessage = "O campo é obrigatório.")]
-        public string HtmlContent { get; set; }
+        public string Content { get; set; }
 
         [Display(Name = "Autor:")]
         [MaxLength(256, ErrorMessage = "É permitido até {1} caracteres.")]

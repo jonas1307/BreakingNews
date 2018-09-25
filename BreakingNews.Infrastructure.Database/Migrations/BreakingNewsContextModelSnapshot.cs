@@ -35,7 +35,7 @@ namespace BreakingNews.Infrastructure.Database.Migrations
                         .IsRequired()
                         .HasMaxLength(256);
 
-                    b.Property<string>("HtmlContent")
+                    b.Property<string>("Content")
                         .IsRequired();
 
                     b.Property<bool>("IsPublished");
