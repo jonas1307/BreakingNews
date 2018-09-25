@@ -9,29 +9,29 @@
 
 <table class="table table-hover">
     <thead>
-    <tr>
-        <th>Id</th>
-        <th>Nome de Usuário</th>
-        @*<th>Ações</th>*@
-    </tr>
+        <tr>
+            <th>Id</th>
+            <th>Nome de Usuário</th>
+            <th>Ações</th>
+        </tr>
     </thead>
     <tbody>
-    @if (Model.Any())
-    {
-        foreach (var news in Model)
+        @if (Model.Any())
+        {
+            foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.Id</td>
+                    <td>@user.UserName</td>
+                    <td><a class="btn-sm btn-primary" href="@Url.Action("Edit", new {id = user.Id.ToUpper()})">Editar</a></td>
+                </tr>
+            }
+        }
+        else
         {
             <tr>
-                <td>@news.Id</td>
-                <td>@news.UserName</td>
-                @*<td><a class="btn-sm btn-primary" href="@Url.Action("Edit", new {id = news.Id})">Editar</a> | <a class="btn-sm btn-danger" href="@Url.Action("Delete", new {id = news.Id})">Excluir</a></td>*@
+                <td colspan="2">Não há usuários para exibir.</td>
             </tr>
         }
-    }
-    else
-    {
-        <tr>
-            <td colspan="2">Não há usuários para exibir.</td>
-        </tr>
-    }
     </tbody>
 </table>

@@ -48,16 +48,16 @@ namespace BreakingNews.Presentation.AspNetCore.Controllers
             return View("FormUsers", model);
         }
 
-        private IEnumerable<SelectListItem> RolesList(IEnumerable<IdentityRole> appRoles, ICollection<string> userRoles)
+        private static IEnumerable<SelectListItem> RolesList(IEnumerable<IdentityRole> appRoles, ICollection<string> userRoles)
         {
-            var retorno = new List<SelectListItem>();
+            var roles = new List<SelectListItem>();
 
             foreach (var role in appRoles.ToList())
             {
-                retorno.Add(new SelectListItem(role.Name, role.Name, userRoles.Contains(role.Name)));
+                roles.Add(new SelectListItem(role.Name, role.Name, userRoles.Contains(role.Name)));
             }
 
-            return retorno;
+            return roles;
         }
 
         [HttpPost]
