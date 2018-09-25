@@ -1,6 +1,25 @@
-﻿@{
-    ViewData["Title"] = "Sobre a aplicação";
-}
-<h2>@ViewData["Title"]</h2>
-
-<p>Essa aplicação foi desenvolvida para validar meus conhecimentos em ASP.NET Core, Design Patterns e Unit Tests.</p>
+﻿<h2>Sobre a aplicação</h2>
+<p>Essa aplicação foi desenvolvida para validar conhecimentos em ASP.NET Core, Design Patterns e Unit Tests.</p>
+<br />
+<h2>Arquitetura</h2>
+<p>A aplicação foi desenvolvida buscando seguir os padrões da arquitetura DDD.</p>
+<p>A base de dados utilizada é SQL Server, acessada através de uma Web API RESTFul em ASP.NET Core 2.1. O front-end foi implementado com a mesma tecnologia.</p>
+<p>Por fim, os usuários são gerenciados através da biblioteca ASP.NET Core Identity e também são utlizadas bibliotecas auxiliares como o AutoMapper.</p>
+<br />
+<h2>Organização</h2>
+<ul>
+    <li>A tela inicial do sistema lista todas as notícias marcadas como publicadas.</li>
+    <li>Ao clicar em uma notícia, o sistema direciona o usuário para uma tela de leitura com URL personalizada.</li>
+    <li>A aplicação possui duas roles principais, sendo: <b>admin</b> e <b>user</b>.</li>
+    <li>A role <b>admin</b> possui acesso a gestão de notícias e a gestão de usuários.</li>
+    <li>A role <b>user</b> não possui acesso as funcionalidas citadas acima.</li>
+    <li>Ao criar uma notícia, deve-se informar um título, uma URL personalizada única, o conteúdo e indicar o autor.</li>
+    <li>As notícias apenas são listadas na página principal após selecionar o checkbox para torná-las públicas.</li>
+    <li>Existem dois usuários cadastrados por padrão, sendo que cada um tem associada uma role.</li>
+</ul>
+<br />
+<h2>Credenciais padrão</h2>
+<ul>
+    <li>Role <b>admin</b>: admin@breakingnewsapp.com | Qwerty!1234</li>
+    <li>Role <b>user</b>: user@breakingnewsapp.com | Qwerty!1234</li>
+</ul>
