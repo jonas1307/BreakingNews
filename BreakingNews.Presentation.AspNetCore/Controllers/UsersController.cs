@@ -23,9 +23,13 @@ namespace BreakingNews.Presentation.AspNetCore.Controllers
 
         public IActionResult Index()
         {
-            var users = _userManager.Users;
+            var model = new UserIndexViewModel
+            {
+                Roles = _roleManager.Roles,
+                Users = _userManager.Users
+            };
 
-            return View(users);
+            return View(model);
         }
 
         public async Task<IActionResult> Edit(string id)
@@ -42,7 +46,7 @@ namespace BreakingNews.Presentation.AspNetCore.Controllers
             {
                 Id = user.Id,
                 UserName = user.UserName,
-                Roles = RolesList(appRoles, userRoles)
+                RolesListItems = RolesList(appRoles, userRoles)
             };
 
             return View("FormUsers", model);
@@ -64,40 +68,101 @@ namespace BreakingNews.Presentation.AspNetCore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Save(UserViewModel model)
         {
+            var user = await _userManager.FindByIdAsync(model.Id);
+            var appRoles = _roleManager.Roles;
+
             if (!ModelState.IsValid)
-                return View("FormUsers", model);
-
-            if (string.IsNullOrEmpty(model.Id))
             {
-                var result = await _userManager.CreateAsync(new IdentityUser(model.UserName), model.Password);
+                model.RolesListItems = RolesList(appRoles, await _userManager.GetRolesAsync(user));
+                return View("FormUsers", model);
+            }
 
-                if (result.Succeeded)
-                {
-                    var user = await _userManager.FindByEmailAsync(model.UserName);
+            await _userManager.RemoveFromRolesAsync(user, appRoles.Select(s => s.Name));
 
-                    foreach (var roleName in model.SelectedRoles)
-                    {
-                        if (!await _userManager.IsInRoleAsync(user, roleName))
-                        {
-                            await _userManager.AddToRoleAsync(user, roleName);
-                        }
-                    }
-                }
+            foreach (var roleName in model.SelectedRoles)
+                await _userManager.AddToRoleAsync(user, roleName);
 
-                RedirectToAction("Index");
+            return RedirectToAction("Index");
+
+        }
+
+        [HttpGet("/Roles/Edit/{id}")]
+        public async Task<IActionResult> EditRole(string id)
+        {
+            var role = await _roleManager.FindByIdAsync(id);
+
+            if (role == null)
+                return NotFound();
+
+            var model = new RoleViewModel
+            {
+                Id = role.Id,
+                Name = role.Name
+            };
+
+            return View("RoleForm", model);
+        }
+
+        [HttpGet("/Roles/New")]
+        public IActionResult NewRole(string id)
+        {
+            var model = new RoleViewModel();
+
+            return View("RoleForm", model);
+        }
+
+        [HttpPost("/Roles/Save")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SaveRole(RoleViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View("RoleForm", model);
+
+            if (model.Id == null)
+            {
+                var role = new IdentityRole(model.Name);
+                await _roleManager.CreateAsync(role);
             }
             else
             {
-                var user = await _userManager.FindByIdAsync(model.Id);
-                var appRoles = _roleManager.Roles;
+                var existingRole = await _roleManager.FindByIdAsync(model.Id);
 
-                await _userManager.RemoveFromRolesAsync(user, appRoles.Select(s => s.Name));
+                if (existingRole.Name == "admin" || existingRole.Name == "user")
+                {
+                    ModelState.AddModelError("Name", "Não é possível alterar as Roles padrões.");
+                    return View("RoleForm", model);
+                }
 
-                foreach (var roleName in model.SelectedRoles)
-                    await _userManager.AddToRoleAsync(user, roleName);
+                existingRole.Name = model.Name;
+
+                await _roleManager.UpdateAsync(existingRole);
             }
 
-            return Ok();
+            return RedirectToAction("Index");
+
+        }
+
+        [HttpGet("/Roles/Delete/{id}")]
+        public async Task<IActionResult> DeleteRole(string id)
+        {
+            var role = await _roleManager.FindByIdAsync(id);
+
+            if (role == null)
+                return NotFound();
+
+            if (role.Name == "admin" || role.Name == "user")
+                return RedirectToAction("Index");
+
+            var userInRole = await _userManager.GetUsersInRoleAsync(role.Name);
+
+            foreach (var user in userInRole)
+            {
+                await _userManager.RemoveFromRoleAsync(user, role.Name);
+            }
+
+            await _roleManager.DeleteAsync(role);
+
+            return RedirectToAction("Index");
         }
     }
 }

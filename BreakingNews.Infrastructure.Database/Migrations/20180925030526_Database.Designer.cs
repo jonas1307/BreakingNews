@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BreakingNews.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(BreakingNewsContext))]
-    [Migration("20180923233054_Database")]
+    [Migration("20180925030526_Database")]
     partial class Database
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,23 +31,20 @@ namespace BreakingNews.Infrastructure.Database.Migrations
                         .IsRequired()
                         .HasMaxLength(256);
 
+                    b.Property<string>("Content")
+                        .IsRequired();
+
                     b.Property<DateTime>("CreationDate");
 
                     b.Property<string>("FriendlyUrl")
                         .IsRequired()
                         .HasMaxLength(256);
 
-                    b.Property<string>("Content")
-                        .IsRequired();
-
                     b.Property<bool>("IsPublished");
 
                     b.Property<DateTime?>("LastUpdateDate");
 
                     b.Property<DateTime?>("PublishDate");
-
-                    b.Property<string>("TextContent")
-                        .IsRequired();
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -178,11 +175,9 @@ namespace BreakingNews.Infrastructure.Database.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.Property<string>("LoginProvider")
-                        .HasMaxLength(128);
+                    b.Property<string>("LoginProvider");
 
-                    b.Property<string>("ProviderKey")
-                        .HasMaxLength(128);
+                    b.Property<string>("ProviderKey");
 
                     b.Property<string>("ProviderDisplayName");
 
@@ -213,11 +208,9 @@ namespace BreakingNews.Infrastructure.Database.Migrations
                 {
                     b.Property<string>("UserId");
 
-                    b.Property<string>("LoginProvider")
-                        .HasMaxLength(128);
+                    b.Property<string>("LoginProvider");
 
-                    b.Property<string>("Name")
-                        .HasMaxLength(128);
+                    b.Property<string>("Name");
 
                     b.Property<string>("Value");
 
