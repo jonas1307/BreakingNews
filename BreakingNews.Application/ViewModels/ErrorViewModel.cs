@@ -1,6 +1,4 @@
-using System;
-
-namespace BreakingNews.Presentation.AspNetCore.Models
+namespace BreakingNews.Application.ViewModels
 {
     public class ErrorViewModel
     {

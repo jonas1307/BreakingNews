@@ -6,7 +6,6 @@ using AutoMapper;
 using BreakingNews.Application.Interfaces;
 using BreakingNews.Application.ViewModels;
 using BreakingNews.Domain.Entities;
-using BreakingNews.Presentation.AspNetCore.Models;
 using Microsoft.AspNetCore.Authorization;
 
 namespace BreakingNews.Presentation.AspNetCore.Controllers
