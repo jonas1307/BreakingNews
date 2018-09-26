@@ -46,9 +46,9 @@ namespace BreakingNews.Services.WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(News model)
+        public async Task<IActionResult> Post([FromBody] News model)
         {
-            _newsService.Add(model);
+            await _newsService.AddAsync(model);
 
             var uri = $"{Request.Path}/{model.Id}";
 
@@ -56,16 +56,25 @@ namespace BreakingNews.Services.WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, News model)
+        public async Task<IActionResult> Put(int id, [FromBody] News model)
         {
             var data = await _newsService.GetById(id);
 
             if (data == null)
                 return NotFound();
 
-            _newsService.Update(model);
+            data.Author = model.Author;
+            data.IsPublished = model.IsPublished;
+            data.FriendlyUrl = model.FriendlyUrl;
+            data.Content = model.Content;
+            data.CreationDate = model.CreationDate;
+            data.PublishDate = model.PublishDate;
+            data.LastUpdateDate = model.LastUpdateDate;
+            data.Title = model.Title;
 
-            return Ok(model);
+            await _newsService.UpdateAsync(data);
+
+            return Ok(data);
         }
 
         [HttpDelete("{id}")]
@@ -76,7 +85,7 @@ namespace BreakingNews.Services.WebApi.Controllers
             if (data == null)
                 return NotFound();
 
-            _newsService.Remove(data);
+            await _newsService.RemoveAsync(data);
 
             return Ok();
         }

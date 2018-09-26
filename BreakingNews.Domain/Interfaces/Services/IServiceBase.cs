@@ -7,11 +7,11 @@ namespace BreakingNews.Domain.Interfaces.Services
 {
     public interface IServiceBase<TEntity> where TEntity : class
     {
-        void Add(TEntity obj);
+        Task AddAsync(TEntity obj);
 
-        void Update(TEntity obj);
+        Task UpdateAsync(TEntity obj);
 
-        void Remove(TEntity obj);
+        Task RemoveAsync(TEntity obj);
 
         Task<IEnumerable<TEntity>> GetAll();
 

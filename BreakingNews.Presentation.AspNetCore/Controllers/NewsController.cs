@@ -24,7 +24,7 @@ namespace BreakingNews.Presentation.AspNetCore.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var data = await _newsAppService.GetNewsByWebService();
+            var data = await _newsAppService.GetAll();
 
             return View(_mapper.Map<IEnumerable<News>, IEnumerable<NewsViewModel>>(data));
         }
@@ -66,12 +66,12 @@ namespace BreakingNews.Presentation.AspNetCore.Controllers
             if (model.Id == 0)
             {
                 model.CreationDate = DateTime.Now;
-                _newsAppService.Add(_mapper.Map<NewsViewModel, News>(model));
+                await _newsAppService.Add(_mapper.Map<NewsViewModel, News>(model));
             }
             else
             {
                 model.LastUpdateDate = DateTime.Now;
-                _newsAppService.Update(_mapper.Map<NewsViewModel, News>(model));
+                await _newsAppService.Update(model.Id, _mapper.Map<NewsViewModel, News>(model));
             }
 
             return RedirectToAction("Index");
@@ -85,7 +85,7 @@ namespace BreakingNews.Presentation.AspNetCore.Controllers
             if (data == null)
                 return NotFound();
 
-            _newsAppService.Remove(data);
+            await _newsAppService.Remove(data.Id);
 
             return RedirectToAction("Index");
         }

@@ -65,15 +65,12 @@ namespace BreakingNews.Presentation.AspNetCore
 
             services.AddScoped(typeof(IAppServiceBase<>), typeof(AppServiceBase<>));
             services.AddScoped<INewsAppService, NewsAppService>();
-            services.AddScoped<IUserAppService, UserAppService>();
 
             services.AddScoped(typeof(IServiceBase<>), typeof(ServiceBase<>));
             services.AddScoped<INewsService, NewsService>();
-            services.AddScoped<IUserService, UserService>();
 
             services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
             services.AddScoped<INewsRepository, NewsRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env,

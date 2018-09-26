@@ -1,48 +1,122 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using BreakingNews.Application.Interfaces;
-using BreakingNews.Domain.Interfaces.Services;
+using Newtonsoft.Json;
 
 namespace BreakingNews.Application.AppService
 {
     public class AppServiceBase<TEntity> : IDisposable, IAppServiceBase<TEntity> where TEntity : class
     {
-        private IServiceBase<TEntity> _serviceBase;
+        protected readonly string BaseUrl;
+        protected readonly string MethodUrl;
 
-        public AppServiceBase(IServiceBase<TEntity> serviceBase)
+        public AppServiceBase(string baseUrl, string methodUrl)
         {
-            _serviceBase = serviceBase;
+            BaseUrl = baseUrl;
+            MethodUrl = $"api/{methodUrl}";
         }
 
-        public void Add(TEntity obj)
+        public async Task<TEntity> Add(TEntity obj)
         {
-            _serviceBase.Add(obj);
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(BaseUrl);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                var request = new HttpRequestMessage(HttpMethod.Post, MethodUrl)
+                {
+                    Content = new StringContent(JsonConvert.SerializeObject(obj), Encoding.UTF8, "application/json")
+                };
+
+                var result = await client.SendAsync(request);
+
+                if (!result.IsSuccessStatusCode)
+                    return null;
+
+                var json = await result.Content.ReadAsStringAsync();
+
+                return JsonConvert.DeserializeObject<TEntity>(json);
+            }
         }
 
-        public void Update(TEntity obj)
+        public async Task<TEntity> Update(int id, TEntity obj)
         {
-            _serviceBase.Update(obj);
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(BaseUrl);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                var request = new HttpRequestMessage(HttpMethod.Put, $"{MethodUrl}/{id}")
+                {
+                    Content = new StringContent(JsonConvert.SerializeObject(obj), Encoding.UTF8, "application/json")
+                };
+
+                var result = await client.SendAsync(request);
+
+                if (!result.IsSuccessStatusCode)
+                    return null;
+
+                var json = await result.Content.ReadAsStringAsync();
+
+                return JsonConvert.DeserializeObject<TEntity>(json);
+            }
         }
 
-        public void Remove(TEntity obj)
+        public async Task Remove(int id)
         {
-            _serviceBase.Remove(obj);
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(BaseUrl);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                await client.DeleteAsync($"{MethodUrl}/{id}");
+            }
         }
 
         public async Task<IEnumerable<TEntity>> GetAll()
         {
-            return await _serviceBase.GetAll();
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(BaseUrl);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                var response = await client.GetAsync(MethodUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return JsonConvert.DeserializeObject<IEnumerable<TEntity>>(await response.Content.ReadAsStringAsync());
+                }
+            }
+
+            return null;
         }
 
         public async Task<TEntity> GetById(int id)
         {
-            return await _serviceBase.GetById(id);
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(BaseUrl);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                var response = await client.GetAsync($"{MethodUrl}/{id}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return JsonConvert.DeserializeObject<TEntity>(await response.Content.ReadAsStringAsync());
+                }
+            }
+
+            return null;
         }
 
         public void Dispose()
-        {
-            _serviceBase = null;
-        }
+        { }
     }
 }

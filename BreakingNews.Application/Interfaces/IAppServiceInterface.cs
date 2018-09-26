@@ -5,11 +5,11 @@ namespace BreakingNews.Application.Interfaces
 {
     public interface IAppServiceBase<TEntity> where TEntity : class
     {
-        void Add(TEntity obj);
+        Task<TEntity> Add(TEntity obj);
 
-        void Update(TEntity obj);
+        Task<TEntity> Update(int id, TEntity obj);
 
-        void Remove(TEntity obj);
+        Task Remove(int id);
 
         Task<IEnumerable<TEntity>> GetAll();
 

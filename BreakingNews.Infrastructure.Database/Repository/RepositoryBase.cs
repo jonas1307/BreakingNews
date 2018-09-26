@@ -12,10 +12,10 @@ namespace BreakingNews.Infrastructure.Database.Repository
     {
         protected readonly BreakingNewsContext Context = new BreakingNewsContext();
 
-        public void Add(TEntity obj)
+        public async Task AddAsync(TEntity obj)
         {
-            Context.Set<TEntity>().Add(obj);
-            Context.SaveChanges();
+            await Task.Run(() => Context.Set<TEntity>().Add(obj));
+            await Context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<TEntity>> GetAll()
@@ -38,16 +38,16 @@ namespace BreakingNews.Infrastructure.Database.Repository
             return await Context.Set<TEntity>().FirstOrDefaultAsync(predicate);
         }
 
-        public void Remove(TEntity obj)
+        public async Task Remove(TEntity obj)
         {
-            Context.Set<TEntity>().Remove(obj);
-            Context.SaveChanges();
+            await Task.Run(() => Context.Set<TEntity>().Remove(obj));
+            await Context.SaveChangesAsync();
         }
 
-        public void Update(TEntity obj)
+        public async Task Update(TEntity obj)
         {
-            Context.Entry(obj).State = EntityState.Modified;
-            Context.SaveChanges();
+            await Task.Run(() => Context.Entry(obj).State = EntityState.Modified);
+            await Context.SaveChangesAsync();
         }
 
         public void Dispose()

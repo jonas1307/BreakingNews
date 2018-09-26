@@ -7,7 +7,7 @@ namespace BreakingNews.Domain.Interfaces.Repositories
 {
     public interface IRepositoryBase<TEntity> where TEntity : class
     {
-        void Add(TEntity obj);
+        Task AddAsync(TEntity obj);
 
         Task<IEnumerable<TEntity>> GetAll();
 
@@ -17,8 +17,8 @@ namespace BreakingNews.Domain.Interfaces.Repositories
 
         Task<TEntity> QuerySingle(Expression<Func<TEntity, bool>> predicate);
 
-        void Remove(TEntity obj);
+        Task Remove(TEntity obj);
 
-        void Update(TEntity obj);
+        Task Update(TEntity obj);
     }
 }

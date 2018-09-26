@@ -16,19 +16,19 @@ namespace BreakingNews.Domain.Services
             Repository = repository;
         }
 
-        public void Add(TEntity obj)
+        public async Task AddAsync(TEntity obj)
         {
-            Repository.Add(obj);
+            await Repository.AddAsync(obj);
         }
 
-        public void Update(TEntity obj)
+        public async Task UpdateAsync(TEntity obj)
         {
-            Repository.Update(obj);
+            await Repository.Update(obj);
         }
 
-        public void Remove(TEntity obj)
+        public async Task RemoveAsync(TEntity obj)
         {
-            Repository.Remove(obj);
+            await Repository.Remove(obj);
         }
 
         public async Task<IEnumerable<TEntity>> GetAll()
