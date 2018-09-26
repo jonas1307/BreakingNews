@@ -16,12 +16,12 @@ namespace BreakingNews.Application.ViewModels
         public int Id { get; set; }
 
         [Display(Name = "URL amigável:")]
-        [MaxLength(256, ErrorMessage = "É permitido até {1} caracteres.")]
+        [MaxLength(256, ErrorMessage = "São permitidos até {1} caracteres.")]
         [Required(ErrorMessage = "O campo é obrigatório.")]
         public string FriendlyUrl { get; set; }
 
         [Display(Name = "Título:")]
-        [MaxLength(256, ErrorMessage = "É permitido até {1} caracteres.")]
+        [MaxLength(256, ErrorMessage = "São permitidos até {1} caracteres.")]
         [Required(ErrorMessage = "O campo é obrigatório.")]
         public string Title { get; set; }
 
@@ -30,7 +30,7 @@ namespace BreakingNews.Application.ViewModels
         public string Content { get; set; }
 
         [Display(Name = "Autor:")]
-        [MaxLength(256, ErrorMessage = "É permitido até {1} caracteres.")]
+        [MaxLength(256, ErrorMessage = "São permitidos até {1} caracteres.")]
         [Required(ErrorMessage = "O campo é obrigatório.")]
         public string Author { get; set; }
 
