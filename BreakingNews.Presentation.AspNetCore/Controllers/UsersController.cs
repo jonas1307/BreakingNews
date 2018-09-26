@@ -32,6 +32,20 @@ namespace BreakingNews.Presentation.AspNetCore.Controllers
             return View(model);
         }
 
+        public IActionResult New()
+        {
+            ViewData["userNameAttributes"] = new { @class = "form-control", autocomplete = "off" };
+
+            var appRoles = _roleManager.Roles;
+
+            var model = new FormUserViewModel
+            {
+                RolesListItems = RolesList(appRoles, null)
+            };
+
+            return View("FormUsers", model);
+        }
+
         public async Task<IActionResult> Edit(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
@@ -42,7 +56,7 @@ namespace BreakingNews.Presentation.AspNetCore.Controllers
             var userRoles = await _userManager.GetRolesAsync(user);
             var appRoles = _roleManager.Roles;
 
-            var model = new UserViewModel
+            var model = new FormUserViewModel
             {
                 Id = user.Id,
                 UserName = user.UserName,
@@ -52,38 +66,95 @@ namespace BreakingNews.Presentation.AspNetCore.Controllers
             return View("FormUsers", model);
         }
 
-        private static IEnumerable<SelectListItem> RolesList(IEnumerable<IdentityRole> appRoles, ICollection<string> userRoles)
+        public async Task<IActionResult> Delete(string id)
         {
-            var roles = new List<SelectListItem>();
+            var user = await _userManager.FindByIdAsync(id);
 
-            foreach (var role in appRoles.ToList())
-            {
-                roles.Add(new SelectListItem(role.Name, role.Name, userRoles.Contains(role.Name)));
-            }
+            if (user == null)
+                return NotFound();
 
-            return roles;
+            await _userManager.DeleteAsync(user);
+
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Save(UserViewModel model)
+        public async Task<IActionResult> Save(FormUserViewModel model)
         {
-            var user = await _userManager.FindByIdAsync(model.Id);
             var appRoles = _roleManager.Roles;
 
-            if (!ModelState.IsValid)
+            if (string.IsNullOrEmpty(model.Id))
             {
-                model.RolesListItems = RolesList(appRoles, await _userManager.GetRolesAsync(user));
-                return View("FormUsers", model);
+                ViewData["userNameAttributes"] = new { @class = "form-control", autocomplete = "off" };
+
+                if (string.IsNullOrEmpty(model.Password))
+                {
+                    ModelState.AddModelError("Password", "A senha é obrigatória.");
+                }
+
+                if (string.IsNullOrEmpty(model.PasswordConfirmation))
+                {
+                    ModelState.AddModelError("PasswordConfirmation", "A confirmação é obrigatória.");
+                }
+
+                if (!string.IsNullOrEmpty(model.Password) && !string.IsNullOrEmpty(model.PasswordConfirmation) &&
+                                          model.Password != model.PasswordConfirmation)
+                {
+                    ModelState.AddModelError("PasswordConfirmation", "A confirmação de senha não confere.");
+                }
+
+                var existingUser = await _userManager.FindByNameAsync(model.UserName);
+
+                if (existingUser != null)
+                {
+                    ModelState.AddModelError("UserName", "O usuário informado já possui cadastro.");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    model.RolesListItems = RolesList(appRoles, null);
+                    return View("FormUsers", model);
+                }
+
+                var user = new IdentityUser(model.UserName);
+
+                var status = await _userManager.CreateAsync(user, model.Password);
+
+                if (status.Succeeded)
+                {
+                    foreach (var role in model.SelectedRoles)
+                    {
+                        await _userManager.AddToRoleAsync(user, role);
+                    }
+                }
+                else
+                {
+                    foreach (var error in status.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                        model.RolesListItems = RolesList(appRoles, await _userManager.GetRolesAsync(user));
+                        return View("FormUsers", model);
+                    }
+                }
+            }
+            else
+            {
+                var user = await _userManager.FindByIdAsync(model.Id);
+
+                if (!ModelState.IsValid)
+                {
+                    model.RolesListItems = RolesList(appRoles, await _userManager.GetRolesAsync(user));
+                    return View("FormUsers", model);
+                }
+
+                await _userManager.RemoveFromRolesAsync(user, appRoles.Select(s => s.Name));
+
+                foreach (var roleName in model.SelectedRoles)
+                    await _userManager.AddToRoleAsync(user, roleName);
             }
 
-            await _userManager.RemoveFromRolesAsync(user, appRoles.Select(s => s.Name));
-
-            foreach (var roleName in model.SelectedRoles)
-                await _userManager.AddToRoleAsync(user, roleName);
-
             return RedirectToAction("Index");
-
         }
 
         [HttpGet("/Roles/Edit/{id}")]
@@ -165,11 +236,16 @@ namespace BreakingNews.Presentation.AspNetCore.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult New()
+        private static IEnumerable<SelectListItem> RolesList(IEnumerable<IdentityRole> appRoles, ICollection<string> userRoles)
         {
-            var model = new UserViewModel();
+            var roles = new List<SelectListItem>();
 
-            return View("FormUsers", model);
+            foreach (var role in appRoles.ToList())
+            {
+                roles.Add(new SelectListItem(role.Name, role.Name, userRoles?.Contains(role.Name) ?? false));
+            }
+
+            return roles;
         }
     }
 }

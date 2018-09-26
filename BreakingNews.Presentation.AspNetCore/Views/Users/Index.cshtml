@@ -6,7 +6,7 @@
 }
 <br />
 <div>
-    Ações: @Html.ActionLink("Novo Usuário", "New", "Users", null, new { @class = "btn btn-success" }) | @Html.ActionLink("Nova Role", "NewRole", "Users", null, new { @class = "btn btn-success" })
+    @Html.ActionLink("Criar Usuário", "New", "Users", null, new { @class = "btn btn-success" }) | @Html.ActionLink("Criar Role", "NewRole", "Users", null, new { @class = "btn btn-success" })
 </div>
 <br />
 <h1>Usuários</h1>
@@ -24,7 +24,7 @@
             {
                 <tr>
                     <td>@user.UserName</td>
-                    <td><a class="btn-sm btn-primary" href="@Url.Action("Edit", new {id = user.Id.ToUpper()})">Editar</a></td>
+                    <td><a class="btn-sm btn-primary" href="@Url.Action("Edit", new {id = user.Id.ToUpper()})">Editar</a> | <a class="btn-sm btn-danger" href="@Url.Action("Delete", new {id = user.Id.ToUpper()})">Excluir</a></td>
                 </tr>
             }
         }

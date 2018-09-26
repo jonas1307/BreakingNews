@@ -1,7 +1,10 @@
-﻿@model BreakingNews.Application.ViewModels.UserViewModel
+﻿@model BreakingNews.Application.ViewModels.FormUserViewModel
 
 @{
-    ViewBag.Title = $"{(string.IsNullOrEmpty(Model.Id) ? "Cadastro" : "Alteração")} de Usuário";
+    var isCreating = string.IsNullOrEmpty(Model.Id);
+    var userNameAttributes = ViewData["userNameAttributes"] ?? new { @readonly = "", @class = "form-control", autocomplete = "off" };
+
+    ViewBag.Title = $"{(isCreating ? "Cadastro" : "Alteração")} de Usuário";
     Layout = "_Layout";
 }
 
@@ -11,17 +14,46 @@
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.Id)
-        @Html.TextBoxFor(m => m.Id, new { @readonly = "", @class = "form-control", autocomplete = "off" })
-        @Html.ValidationMessageFor(m => m.Id)
-    </div>
+    @Html.ValidationSummary(true)
+
+    if (isCreating)
+    {
+        @Html.HiddenFor(m => m.Id)
+    }
+    else
+    {
+        <div class="form-group">
+            @Html.LabelFor(m => m.Id)
+            @Html.TextBoxFor(m => m.Id, new { @readonly = "", @class = "form-control", autocomplete = "off" })
+            @Html.ValidationMessageFor(m => m.Id)
+        </div>
+    }
 
     <div class="form-group">
         @Html.LabelFor(m => m.UserName)
-        @Html.TextBoxFor(m => m.UserName, new { @readonly = "", @class = "form-control", autocomplete = "off" })
+        @Html.TextBoxFor(m => m.UserName, userNameAttributes)
         @Html.ValidationMessageFor(m => m.UserName)
     </div>
+
+    if (isCreating)
+    {
+        <div class="form-group">
+            @Html.LabelFor(m => m.Password)
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control", autocomplete = "off" })
+            @Html.ValidationMessageFor(m => m.Password)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.PasswordConfirmation)
+            @Html.PasswordFor(m => m.PasswordConfirmation, new { @class = "form-control", autocomplete = "off" })
+            @Html.ValidationMessageFor(m => m.PasswordConfirmation)
+        </div>
+    }
+    else
+    {
+        @Html.HiddenFor(m => m.Password)
+        @Html.HiddenFor(m => m.PasswordConfirmation)
+    }
 
     <div class="form-group">
         @Html.LabelFor(m => m.SelectedRoles)
@@ -31,6 +63,6 @@
 
     <div class="form-group">
         <button class="btn btn-success" type="submit">Salvar</button>
-        <a href="@Url.Action("Index", "News")" class="btn btn-danger">Voltar</a>
+        <a href="@Url.Action("Index")" class="btn btn-danger">Voltar</a>
     </div>
 }

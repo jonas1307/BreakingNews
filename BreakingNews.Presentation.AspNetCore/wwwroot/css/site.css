@@ -58,7 +58,7 @@ textarea {
 }
 
 .field-validation-error,
-label.error {
+label.error, .validation-summary-errors {
     color: red;
     font-size: 12px;
 }
@@ -66,4 +66,8 @@ label.error {
 .input-validation-error,
 input.error {
     border: 1px solid red;
+}
+
+a {
+    text-decoration: none !important
 }
