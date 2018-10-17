@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2015
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BreakingNews.Domain", "BreakingNews.Domain\BreakingNews.Domain.csproj", "{7EFBB7C7-1212-4CD7-9FB3-57C3C0E2CF3B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BreakingNews.Domain", "src\BreakingNews.Domain\BreakingNews.Domain.csproj", "{7EFBB7C7-1212-4CD7-9FB3-57C3C0E2CF3B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BreakingNews.Infrastructure.Database", "BreakingNews.Infrastructure.Database\BreakingNews.Infrastructure.Database.csproj", "{13CBE476-FCA6-4A4D-8356-183F5F186032}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BreakingNews.Infrastructure.Database", "src\BreakingNews.Infrastructure.Database\BreakingNews.Infrastructure.Database.csproj", "{13CBE476-FCA6-4A4D-8356-183F5F186032}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BreakingNews.Application", "BreakingNews.Application\BreakingNews.Application.csproj", "{0DBE41E4-1A12-483C-A266-2DCBDA3370B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BreakingNews.Application", "src\BreakingNews.Application\BreakingNews.Application.csproj", "{0DBE41E4-1A12-483C-A266-2DCBDA3370B7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BreakingNews.Presentation.AspNetCore", "BreakingNews.Presentation.AspNetCore\BreakingNews.Presentation.AspNetCore.csproj", "{0B27A0EA-0648-4F84-B3BE-93C8D1BF6B3F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BreakingNews.Presentation.AspNetCore", "src\BreakingNews.Presentation.AspNetCore\BreakingNews.Presentation.AspNetCore.csproj", "{0B27A0EA-0648-4F84-B3BE-93C8D1BF6B3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BreakingNews.Services.WebApi", "BreakingNews.Services.WebApi\BreakingNews.Services.WebApi.csproj", "{2CCB8F03-3B21-46B4-B4CE-4C9786D13CC1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BreakingNews.Services.WebApi", "src\BreakingNews.Services.WebApi\BreakingNews.Services.WebApi.csproj", "{2CCB8F03-3B21-46B4-B4CE-4C9786D13CC1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
